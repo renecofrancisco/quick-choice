@@ -51,7 +51,6 @@ export default function MyPollsPage() {
     if (!userId) return;
 
     const { error } = await supabase.rpc("create_poll", {
-      p_user_id: userId,
       p_option_a: optionA,
       p_option_b: optionB,
     });
