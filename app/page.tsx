@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+// app/page.tsx
+import VotePage from "./vote/page";
 
-export default function Home() {
-  redirect("/login");
+export default function HomePage() {
+  return <VotePage />;
 }
