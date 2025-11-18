@@ -1,6 +1,6 @@
 // supabase/functions/fakeVotes/index.ts
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.34.0/dist/module/index.js";
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
