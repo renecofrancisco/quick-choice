@@ -50,10 +50,12 @@ export default function MyPollsPage() {
     e.preventDefault();
     if (!userId) return;
 
-    const { error } = await supabase.rpc("create_poll", {
+    const { data, error } = await supabase.rpc("create_poll", {
       p_option_a: optionA,
       p_option_b: optionB,
     });
+
+    const newPollId = data as string;
 
     if (error) {
       setMessage("Error creating poll.");
@@ -63,6 +65,22 @@ export default function MyPollsPage() {
       setOptionB("");
       fetchPolls(userId);
     }
+
+    const functionUrl = "https://<project-ref>.functions.supabase.co/fakeVotes";
+
+try {
+  await fetch(functionUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      pollId: newPollId,
+    }),
+  });
+} catch (err) {
+  console.error("Failed to trigger fakeVotes function", err);
+}
   };
 
   return (

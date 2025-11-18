@@ -32,7 +32,7 @@ export default function LoginPage() {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL },
+        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback` },
     });
     if (error) setMessage(error.message);
     else setMessage("Check your email for the login link!");

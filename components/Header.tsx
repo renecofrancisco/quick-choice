@@ -34,7 +34,7 @@ export default function Header() {
   // Logout
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   // Close dropdown when clicking outside
