@@ -53,11 +53,35 @@ export default function MyPollsPage() {
     }
   };
 
+  const fetchPollById = async (pollId: string) => {
+    if (!userId) return null;
+
+    const { data, error } = await supabase.rpc("get_poll_by_id", {
+      p_poll_id: pollId,
+    });
+
+    if (error) {
+      console.error('Error fetching poll:', error);
+      return null;
+    }
+
+    if (!data || data.length === 0) return null;
+
+    const latestPoll = data[0] as Poll;
+
+    setPolls((prevPolls) =>
+      prevPolls.map((p) => (p.poll_id === pollId ? latestPoll : p))
+    );
+
+    return latestPoll;
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) return;
 
     const { data, error } = await supabase.rpc("create_poll", {
+      p_user_id: userId,
       p_option_a: optionA,
       p_option_b: optionB,
     });
@@ -74,7 +98,7 @@ export default function MyPollsPage() {
     }
 
     try {
-      await fetch("https://<project-ref>.functions.supabase.co/fakeVotes", {
+      await fetch("/api/fakeVotes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pollId: newPollId }),
@@ -84,10 +108,12 @@ export default function MyPollsPage() {
     }
   };
 
-  const openResultModal = (poll: Poll) => {
-    setSelectedPoll(poll);
+  const openResultModal = async (poll: Poll) => {
+    const latestPoll = await fetchPollById(poll.poll_id); // fetch fresh data
+    setSelectedPoll(latestPoll || poll); // fallback to old data if fetch fails
     setShowResultModal(true);
   };
+
 
   return (
     <div className="flex flex-col items-center justify-start h-full p-6 space-y-6">
