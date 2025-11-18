@@ -69,32 +69,42 @@ export default function VotePage() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-6 space-y-4">
-      {poll ? (
-        <>
-          <h1 className="text-2xl font-bold">Vote</h1>
-          <button
-            onClick={() => vote("A")}
-            className="bg-blue-600 text-white p-3 rounded w-full"
-          >
-            {poll.option_a}
-          </button>
-          <button
-            onClick={() => vote("B")}
-            className="bg-green-600 text-white p-3 rounded w-full"
-          >
-            {poll.option_b}
-          </button>
-          <button
-            onClick={() => vote("skip")}
-            className="bg-gray-400 text-white p-2 rounded w-full"
-          >
-            Skip
-          </button>
-        </>
-      ) : (
-        <p className="text-gray-600">{message || "Loading poll..."}</p>
-      )}
-    </div>
+    <div className="flex flex-col items-center justify-center h-full p-6 space-y-6">
+
+  {poll ? (
+    <>
+      {/* Options container */}
+      <div className="flex flex-col items-center space-y-4">
+        <button
+          onClick={() => vote("A")}
+          className="bg-blue-600 text-white text-2xl font-bold p-6 rounded-lg w-64 max-w-full hover:bg-blue-700 transition"
+        >
+          {poll.option_a}
+        </button>
+
+        <span className="text-gray-500 font-semibold text-lg">OR</span>
+
+        <button
+          onClick={() => vote("B")}
+          className="bg-green-600 text-white text-2xl font-bold p-6 rounded-lg w-64 max-w-full hover:bg-green-700 transition"
+        >
+          {poll.option_b}
+        </button>
+      </div>
+
+      {/* Skip button: detached */}
+      <button
+  onClick={() => vote("skip")}
+  className="mt-8 bg-gray-200 text-gray-500 text-sm p-2 rounded w-40"
+>
+  Skip
+</button>
+    </>
+  ) : (
+    <p className="text-gray-600">{message || "Loading poll..."}</p>
+  )}
+</div>
+
+
   );
 }

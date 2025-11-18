@@ -39,7 +39,7 @@ export default function ProtectedLayout({ children }: Props) {
   return (
     <>
       <Header />
-      <main className="pt-20 pb-20">{children}</main>
+      <main className="flex-1 pt-20 pb-20">{children}</main>
       <Footer />
     </>
   );

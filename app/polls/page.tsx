@@ -1,6 +1,8 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 
 interface Poll {
   poll_id: string;
@@ -18,15 +20,20 @@ export default function MyPollsPage() {
   const [optionB, setOptionB] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
+
+  const COLORS = ["#4f46e5", "#16a34a", "#facc15"]; // blue, green, yellow
+
   useEffect(() => {
-    const fetchUserAndPolls = async () => {
+    const load = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setUserId(user.id);
       fetchPolls(user.id);
     };
-
-    fetchUserAndPolls();
+    load();
   }, []);
 
   const fetchPolls = async (uid: string) => {
@@ -60,91 +67,165 @@ export default function MyPollsPage() {
     if (error) {
       setMessage("Error creating poll.");
     } else {
-      setMessage("Poll created successfully!");
       setOptionA("");
       setOptionB("");
+      setShowCreateModal(false);
       fetchPolls(userId);
     }
 
-    const functionUrl = "https://<project-ref>.functions.supabase.co/fakeVotes";
+    try {
+      await fetch("https://<project-ref>.functions.supabase.co/fakeVotes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pollId: newPollId }),
+      });
+    } catch (err) {
+      console.error("Failed to trigger fakeVotes function", err);
+    }
+  };
 
-try {
-  await fetch(functionUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      pollId: newPollId,
-    }),
-  });
-} catch (err) {
-  console.error("Failed to trigger fakeVotes function", err);
-}
+  const openResultModal = (poll: Poll) => {
+    setSelectedPoll(poll);
+    setShowResultModal(true);
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
-      {/* Create New Poll */}
-      <div className="border p-4 rounded space-y-2">
-        <h2 className="text-xl font-bold">Create New Poll</h2>
-        <form onSubmit={handleCreate} className="flex flex-col space-y-2">
-          <input
-            type="text"
-            placeholder="Option A"
-            value={optionA}
-            onChange={(e) => setOptionA(e.target.value)}
-            maxLength={20}
-            required
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Option B"
-            value={optionB}
-            onChange={(e) => setOptionB(e.target.value)}
-            maxLength={20}
-            required
-            className="border p-2 rounded"
-          />
+    <div className="flex flex-col items-center justify-start h-full p-6 space-y-6">
+      {message && <p>{message}</p>}
+
+      {/* Poll List: only show choices */}
+      <div className="space-y-4">
+        {polls.map((poll) => (
           <button
-            type="submit"
-            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            key={poll.poll_id}
+            onClick={() => openResultModal(poll)}
+            className="w-full text-left border p-4 rounded hover:bg-gray-50"
           >
-            Post Poll (-1 credit)
+            {poll.option_a} vs {poll.option_b}
           </button>
-        </form>
+        ))}
       </div>
 
-      {/* My Last 5 Polls */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold">My Last 5 Polls</h2>
-        {message && <p>{message}</p>}
-        {polls.map((poll) => {
-          const totalVotes = poll.votes_a + poll.votes_b + poll.votes_skip;
-          return (
-            <div key={poll.poll_id} className="border p-4 rounded">
-              <p className="font-semibold">
-                {poll.option_a} vs {poll.option_b}
+      {/* Floating + Button */}
+      <button
+        onClick={() => setShowCreateModal(true)}
+        className="fixed bottom-20 right-6 bg-blue-600 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center shadow-lg hover:bg-blue-700"
+      >
+        +
+      </button>
+
+
+      {/* Create Poll Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-lg font-bold mb-4">Create New Poll</h2>
+            <form onSubmit={handleCreate} className="space-y-3">
+              <input
+                type="text"
+                placeholder="Option A"
+                value={optionA}
+                onChange={(e) => setOptionA(e.target.value)}
+                maxLength={20}
+                required
+                className="border p-2 rounded w-full"
+              />
+              <input
+                type="text"
+                placeholder="Option B"
+                value={optionB}
+                onChange={(e) => setOptionB(e.target.value)}
+                maxLength={20}
+                required
+                className="border p-2 rounded w-full"
+              />
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Create (-1 credit)
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Poll Result Modal */}
+      {showResultModal && selectedPoll && (() => {
+        const votesA = selectedPoll.votes_a;
+        const votesB = selectedPoll.votes_b;
+        const totalVotes = votesA + votesB || 1; // avoid division by zero
+        const percentA = ((votesA / totalVotes) * 100).toFixed(1);
+        const percentB = ((votesB / totalVotes) * 100).toFixed(1);
+
+        // Determine winner
+        const winner =
+          votesA > votesB
+            ? selectedPoll.option_a
+            : votesB > votesA
+            ? selectedPoll.option_b
+            : selectedPoll.option_a; // tie → first option wins
+
+        const winnerPercent =
+          votesA > votesB ? percentA : votesB > votesA ? percentB : percentA;
+
+        return (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+            <div className="bg-white p-6 rounded-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-2">
+                {selectedPoll.option_a} vs {selectedPoll.option_b}
+              </h2>
+
+              <p className="mb-4 text-center font-semibold text-blue-600">
+                Winner: {winner} ({winnerPercent}%)
               </p>
-              <div className="text-sm mt-2">
-                <p>
-                  Option A: {poll.votes_a} (
-                  {totalVotes ? ((poll.votes_a / totalVotes) * 100).toFixed(1) : 0}%)
-                </p>
-                <p>
-                  Option B: {poll.votes_b} (
-                  {totalVotes ? ((poll.votes_b / totalVotes) * 100).toFixed(1) : 0}%)
-                </p>
-                <p>
-                  Skipped: {poll.votes_skip} (
-                  {totalVotes ? ((poll.votes_skip / totalVotes) * 100).toFixed(1) : 0}%)
-                </p>
+
+              <PieChart width={300} height={300}>
+                <Pie
+                  data={[
+                    { name: selectedPoll.option_a, value: votesA },
+                    { name: selectedPoll.option_b, value: votesB },
+                  ]}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ name, percent }) =>
+                    `${name}: ${((percent ?? 0) * 100).toFixed(1)}%`
+                  }
+                >
+                  <Cell key="A" fill="#4f46e5" /> {/* Option A = blue */}
+                  <Cell key="B" fill="#16a34a" /> {/* Option B = green */}
+                </Pie>
+                <Tooltip formatter={(value: number) => `${value} votes`} />
+                <Legend />
+              </PieChart>
+
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setShowResultModal(false)}
+                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                >
+                  Close
+                </button>
               </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })()}
+
+
+
     </div>
   );
 }
