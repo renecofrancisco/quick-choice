@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const { pollId } = await req.json();
 
   const res = await fetch(
-    "https://jgdlaclvojzuxiweruoe.functions.supabase.co/fakeVotes",
+    process.env.NEXT_PUBLIC_FAKE_VOTES_FUNCTION_URL!,
     {
       method: "POST",
       headers: {

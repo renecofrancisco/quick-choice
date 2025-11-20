@@ -14,7 +14,8 @@ export default function Footer() {
   return (
     <footer className="fixed bottom-0 left-0 w-full flex border-t shadow-md">
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href;
+        const isActive = pathname === tab.href || 
+          (tab.href === "/vote" && pathname === "/");
 
         return (
           <Link

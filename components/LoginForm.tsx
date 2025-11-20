@@ -2,40 +2,56 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { useServices } from "@/shared-backend/contexts/ServiceContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { authService } = useServices(); // use context services
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Check if user is already logged in
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        router.replace("/"); // Redirect if already logged in
-      } else {
-        setLoading(false); // Show login form
+      try {
+        const { user } = await authService.getUser();
+        if (user) {
+          router.replace("/"); // Redirect if logged in
+        } else {
+          setLoading(false); // Show login form
+        }
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
       }
     };
+
     checkUser();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Auth state listener
+    const unsubscribe = authService.onAuthStateChange((_event, session) => {
       if (session?.user) router.replace("/");
     });
 
-    return () => listener?.subscription.unsubscribe();
-  }, [router]);
+    return () => unsubscribe?.unsubscribe?.();
+  }, [router, authService]);
 
+  // Login handler
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback` },
-    });
-    if (error) setMessage(error.message);
+    try {
+      const { error } = await authService.signInWithOtp(
+      email,
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
+    );
+
+    if (error) setMessage(error); // <-- just use error directly
     else setMessage("Check your email for the login link!");
+    } catch (err) {
+      console.error(err);
+      setMessage("An error occurred while sending login link.");
+    }
   };
 
   if (loading) return <p>Loading...</p>;

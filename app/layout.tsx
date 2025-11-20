@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ProtectedLayout from "@/components/ProtectedLayout";
+import { createServices } from "@/shared-backend/services/createServices";
+import { ServiceProvider } from "@/shared-backend/contexts/ServiceProvider";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -12,10 +14,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const services = createServices();
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ProtectedLayout>{children}</ProtectedLayout>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}>
+        <ServiceProvider>
+          <ProtectedLayout>{children}</ProtectedLayout>
+        </ServiceProvider>
       </body>
     </html>
   );

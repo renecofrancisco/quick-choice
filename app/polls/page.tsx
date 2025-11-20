@@ -1,20 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
-
-interface Poll {
-  poll_id: string;
-  option_a: string;
-  option_b: string;
-  votes_a: number;
-  votes_b: number;
-  votes_skip: number;
-}
+import { IPoll } from "@/shared-backend/models/IPoll";
+import { useServices } from "@/shared-backend/contexts/ServiceContext";
 
 export default function MyPollsPage() {
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const { authService, pollService, voteService } = useServices();
+
+  const [polls, setPolls] = useState<IPoll[]>([]);
   const [message, setMessage] = useState("");
   const [optionA, setOptionA] = useState("");
   const [optionB, setOptionB] = useState("");
@@ -22,101 +16,81 @@ export default function MyPollsPage() {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
-  const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
+  const [selectedPoll, setSelectedPoll] = useState<IPoll | null>(null);
 
-  const COLORS = ["#4f46e5", "#16a34a", "#facc15"]; // blue, green, yellow
+  const COLORS = ["#4f46e5", "#16a34a", "#facc15"];
 
   useEffect(() => {
     const load = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { user } = await authService.getUser();
       if (!user) return;
       setUserId(user.id);
-      fetchPolls(user.id);
+      await fetchPolls(user.id);
     };
     load();
   }, []);
 
   const fetchPolls = async (uid: string) => {
-    const { data, error } = await supabase.rpc("get_user_polls", {
-      p_user_id: uid,
-    });
-
-    if (error) {
-      console.error(error);
+    try {
+      const data = await pollService.getUserPolls(uid);
+      if (!data || data.length === 0) {
+        setMessage("You haven't created any polls yet.");
+        setPolls([]);
+      } else {
+        setMessage("");
+        setPolls(data);
+      }
+    } catch (err) {
+      console.error(err);
       setMessage("Error fetching your polls.");
-    } else if (!data || data.length === 0) {
-      setMessage("You haven't created any polls yet.");
-      setPolls([]);
-    } else {
-      setMessage("");
-      setPolls(data as Poll[]);
     }
   };
 
   const fetchPollById = async (pollId: string) => {
     if (!userId) return null;
+    try {
+      const latestPoll = await pollService.getPollById(pollId);
+      if (!latestPoll) return null;
 
-    const { data, error } = await supabase.rpc("get_poll_by_id", {
-      p_poll_id: pollId,
-    });
+      setPolls((prevPolls) =>
+        prevPolls.map((p) => (p.poll_id === pollId ? latestPoll : p))
+      );
 
-    if (error) {
-      console.error('Error fetching poll:', error);
+      return latestPoll;
+    } catch (err) {
+      console.error("Error fetching poll:", err);
       return null;
     }
-
-    if (!data || data.length === 0) return null;
-
-    const latestPoll = data[0] as Poll;
-
-    setPolls((prevPolls) =>
-      prevPolls.map((p) => (p.poll_id === pollId ? latestPoll : p))
-    );
-
-    return latestPoll;
   };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) return;
 
-    const { data, error } = await supabase.rpc("create_poll", {
-      p_user_id: userId,
-      p_option_a: optionA,
-      p_option_b: optionB,
-    });
+    try {
+      const newPollId = await pollService.createPoll(userId, optionA, optionB);
 
-    const newPollId = data as string;
-
-    if (error) {
-      setMessage("Error creating poll.");
-    } else {
       setOptionA("");
       setOptionB("");
       setShowCreateModal(false);
       fetchPolls(userId);
-    }
-
-    try {
-      await fetch("/api/fakeVotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pollId: newPollId }),
-      });
+      
+      await voteService.triggerFakeVotes(newPollId);
     } catch (err) {
-      console.error("Failed to trigger fakeVotes function", err);
+      console.error(err);
+      setMessage("Error creating poll.");
     }
   };
 
-  const openResultModal = async (poll: Poll) => {
-    const latestPoll = await fetchPollById(poll.poll_id); // fetch fresh data
-    setSelectedPoll(latestPoll || poll); // fallback to old data if fetch fails
+  const openResultModal = async (poll: IPoll) => {
+    const latestPoll = await fetchPollById(poll.poll_id);
+    setSelectedPoll(latestPoll || poll);
     setShowResultModal(true);
   };
 
 
   return (
-    <div className="flex flex-col items-center justify-start h-full p-6 space-y-6">
+    <div className="flex flex-col items-center justify-center flex-1 px-6">
       {message && <p>{message}</p>}
 
       {/* Poll List: only show choices */}
