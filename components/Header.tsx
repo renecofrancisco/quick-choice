@@ -52,7 +52,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="flex justify-between items-center p-4 bg-white shadow-md fixed top-0 left-0 w-full z-10">
+    <header className="flex justify-between items-center p-4 bg-white shadow-md sticky top-0 left-0 w-full z-10">
       <h1 className="text-xl font-bold">Quick Choice</h1>
 
       <div className="relative flex items-center space-x-4" ref={containerRef}>

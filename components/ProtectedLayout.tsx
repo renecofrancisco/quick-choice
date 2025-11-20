@@ -44,7 +44,7 @@ export default function ProtectedLayout({ children }: Props) {
   return (
     <>
       <Header />
-      <main className="flex-1 flex flex-col justify-center items-center">{children}</main>
+      <main className="flex-1 overflow-y-auto">{children}</main>
       <Footer />
     </>
   );
