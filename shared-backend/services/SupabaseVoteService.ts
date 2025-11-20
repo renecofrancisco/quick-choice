@@ -29,12 +29,15 @@ export class SupabaseVoteService implements IVoteService {
   }
 
   async triggerFakeVotes(pollId: string): Promise<void> {
-    const res = await fetch(this.fakeVotesUrl, {
+    const res = await fetch("/api/fakeVotes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pollId }),
     });
 
-    if (!res.ok) throw new Error("Failed to trigger fake votes");
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to trigger fake votes: ${text}`);
+    }
   }
 }

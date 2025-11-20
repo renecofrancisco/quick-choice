@@ -6,7 +6,7 @@ import { IPoll } from "@/shared-backend/models/IPoll";
 import { useServices } from "@/shared-backend/contexts/ServiceContext";
 
 export default function MyPollsPage() {
-  const { authService, pollService } = useServices();
+  const { authService, pollService, voteService } = useServices();
 
   const [polls, setPolls] = useState<IPoll[]>([]);
   const [message, setMessage] = useState("");
@@ -75,11 +75,7 @@ export default function MyPollsPage() {
       setShowCreateModal(false);
       fetchPolls(userId);
 
-      await fetch("/api/fakeVotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pollId: newPollId }),
-      });
+      await voteService.triggerFakeVotes(newPollId);
     } catch (err) {
       console.error(err);
       setMessage("Error creating poll.");
