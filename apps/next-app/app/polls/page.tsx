@@ -70,8 +70,6 @@ export default function MyPollsPage() {
     try {
       const newPollId = await pollService.createPoll(userId, optionA, optionB);
 
-      console.log("Created new poll with ID:", newPollId);
-
       setOptionA("");
       setOptionB("");
       setShowCreateModal(false);
@@ -89,8 +87,6 @@ export default function MyPollsPage() {
     setSelectedPoll(latestPoll || poll);
     setShowResultModal(true);
   };
-
-  console.log(polls.filter(p => !p.poll_id));
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-6">

@@ -38,10 +38,8 @@ export default function LoginPage() {
         email,
         `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
       );
-      console.log("[DEBUG] Magic link request sent successfully");
       setMessage("Check your email for the login link!");
     } catch (err: any) {
-      console.error("[ERROR] Failed to send magic link:", err.message);
       setMessage("An error occurred while sending login link.");
     }
   };

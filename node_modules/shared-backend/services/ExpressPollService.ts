@@ -17,7 +17,6 @@ export class ExpressPollService implements IPollService {
     const res = await fetch(`${this.baseUrl}/${pollId}`);
     if (!res.ok) throw new Error("Failed to fetch poll from Express API");
     const data = await res.json();
-    console.log("Fetched poll data:", data);
     return data || null;
   }
 
@@ -29,7 +28,6 @@ export class ExpressPollService implements IPollService {
     });
     if (!res.ok) throw new Error("Failed to create poll via Express API");
     const data = await res.json();
-    console.log("Created poll response data:", data);
     return data.pollId as string; // return new poll id
   }
 }

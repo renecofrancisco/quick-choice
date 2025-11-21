@@ -13,7 +13,6 @@ export default function CallbackPage() {
     async function run() {
       try {
         const session = await authService.getSession();
-        console.log("[DEBUG] Retrieved session in callback:", session);
         if (session?.user) {
           handleSession(session);
           return;
@@ -21,7 +20,6 @@ export default function CallbackPage() {
 
         await new Promise((r) => setTimeout(r, 300));
         const retry = await authService.getSession();
-        console.log("[DEBUG] Retried session in callback:", retry);
         if (retry?.user) {
           handleSession(retry);
           return;

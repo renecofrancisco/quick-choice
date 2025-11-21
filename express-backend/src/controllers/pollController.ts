@@ -4,13 +4,10 @@ import { supabase } from "../lib/supabase";
 // GET /polls/next?userId=...
 export const getNextPoll = async (req: Request, res: Response) => {
   const userId = req.query.userId as string;
-  console.log("Fetching next poll for userId:", userId);
   if (!userId) return res.status(400).json({ error: "Missing userId" });
 
   try {
     const { data, error } = await supabase.rpc("get_next_poll", { p_user_id: userId });
-
-    console.log("Next poll data:", data, "Error:", error);
 
     if (error) throw error;
 
