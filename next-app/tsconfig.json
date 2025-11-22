@@ -40,5 +40,4 @@
   "exclude": [
     "next-frontend/node_modules"
   ],
-  "extends": "../../tsconfig.json",
 }

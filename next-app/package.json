@@ -15,7 +15,7 @@
     "react-dom": "19.2.0",
     "recharts": "^3.4.1",
     "supabase": "^2.58.5",
-    "shared-backend": "file:../../packages/shared-backend"
+    "shared-backend": "file:../shared-backend"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
