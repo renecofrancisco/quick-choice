@@ -13,8 +13,8 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "recharts": "^3.4.1",
-    "supabase": "^2.58.5",
-    "shared-backend": "file:../shared-backend/dist"
+    "shared-backend": "file:../shared-backend/shared-backend-1.0.0.tgz",
+    "supabase": "^2.58.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

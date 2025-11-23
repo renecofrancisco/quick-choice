@@ -2,18 +2,21 @@
 
 import { ReactNode, useMemo } from "react";
 import { ServiceContext } from "./ServiceContext";
-import { createSupabaseServices, createExpressServices } from "shared-backend";
-import { supabaseClient } from "../lib/supabase";
+import { BackendType } from "./backendTypes";
+import { createServicesByType } from "./ServiceFactory";
 
-export function ServiceProvider({ children }: { children: ReactNode }) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  const services = createSupabaseServices(supabaseUrl, supabaseAnonKey); //Use supabase services
-  // const services = createExpressServices(process.env.NEXT_PUBLIC_EXPRESS_API_URL!); //Use express services
-  const memoServices = useMemo(() => services, []);
+interface ServiceProviderProps {
+  children: ReactNode;
+}
+
+export function ServiceProvider({ children }: ServiceProviderProps) {
+  const backendTypeEnv = Number(process.env.NEXT_PUBLIC_BACKEND_TYPE);
+  const backendType = backendTypeEnv as BackendType;
+
+  const services = useMemo(() => createServicesByType(backendType), [backendType]);
 
   return (
-    <ServiceContext.Provider value={memoServices}>
+    <ServiceContext.Provider value={services}>
       {children}
     </ServiceContext.Provider>
   );
