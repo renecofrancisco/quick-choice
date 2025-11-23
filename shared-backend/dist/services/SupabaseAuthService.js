@@ -19,6 +19,8 @@ class SupabaseAuthService {
         const { error } = await this.supabase.auth.signOut();
         if (error)
             throw error;
+        localStorage.removeItem("session_token");
+        localStorage.removeItem("refresh_token");
     }
     async getUser() {
         const access_token = localStorage.getItem("session_token");
@@ -28,8 +30,11 @@ class SupabaseAuthService {
         }
         try {
             const { data, error } = await this.supabase.auth.getSession();
-            if (error || !data.session?.user)
+            if (error || !data.session?.user) {
+                localStorage.removeItem("session_token");
+                localStorage.removeItem("refresh_token");
                 return null;
+            }
             const u = data.session.user;
             return { id: u.id, email: u.email ?? "" };
         }

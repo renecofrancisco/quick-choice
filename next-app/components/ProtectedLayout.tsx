@@ -32,8 +32,7 @@ export default function ProtectedLayout({ children }: Props) {
       try {
         const u = await authService.getUser();
         if (!u) {
-          localStorage.removeItem("session_token");
-          localStorage.removeItem("refresh_token");
+
         }
         setUser(u);
       } catch (err) {

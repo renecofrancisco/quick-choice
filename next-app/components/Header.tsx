@@ -31,8 +31,6 @@ export default function Header() {
 
   const handleLogout = async () => {
     await authService.signOut();
-    localStorage.removeItem("session_token");
-    localStorage.removeItem("refresh_token");
     broadcastAuthStateChangeEvent();
     window.location.href = "/";
   };
