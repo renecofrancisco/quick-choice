@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { IAuthService } from "shared-backend/interfaces/IAuthService";
-import { IPollService } from "shared-backend/interfaces/IPollService";
-import { IProfileService } from "shared-backend/interfaces/IProfileService";
-import { IVoteService } from "shared-backend/interfaces/IVoteService";
+import { IAuthService } from "shared-backend";
+import { IPollService } from "shared-backend";
+import { IProfileService } from "shared-backend";
+import { IVoteService } from "shared-backend";
 
 export interface ServiceContextValue {
   authService: IAuthService;

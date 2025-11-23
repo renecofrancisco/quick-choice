@@ -9,13 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.81.1",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "recharts": "^3.4.1",
     "supabase": "^2.58.5",
-    "shared-backend": "file:../shared-backend"
+    "shared-backend": "file:../shared-backend/dist"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

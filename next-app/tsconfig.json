@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -25,19 +25,18 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "next-frontend/.next/types/**/*.ts",
-    "next-frontend/.next/dev/types/**/*.ts",
     "**/*.mts",
-    "../../packages/shared-backend/lib/supabase.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "next-frontend/node_modules"
-  ],
+    "node_modules"
+  ]
 }
