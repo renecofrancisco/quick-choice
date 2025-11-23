@@ -6,7 +6,8 @@
     "dev": "next dev --inspect",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz"
   },
   "dependencies": {
     "next": "16.0.3",

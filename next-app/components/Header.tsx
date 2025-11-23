@@ -12,7 +12,7 @@ export default function Header() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const fetchCredits = async () => {
-    const { user } = await authService.getUser();
+    const user = await authService.getUser();
     if (!user) return;
 
     try {
@@ -31,6 +31,8 @@ export default function Header() {
 
   const handleLogout = async () => {
     await authService.signOut();
+    localStorage.removeItem("session_token");
+    localStorage.removeItem("refresh_token");
     broadcastAuthStateChangeEvent();
     window.location.href = "/";
   };

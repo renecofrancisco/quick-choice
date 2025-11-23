@@ -12,19 +12,20 @@ export default function CallbackPage() {
   useEffect(() => {
     async function run() {
       try {
-        const session = await authService.getSession();
-        if (session?.user) {
-          handleSession(session);
-          return;
+        // 1. Extract tokens from URL hash
+        const { access_token, refresh_token } = extractTokensFromUrl();
+        if (access_token && refresh_token) {
+          localStorage.setItem("session_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
         }
 
-        await new Promise((r) => setTimeout(r, 300));
-        const retry = await authService.getSession();
-        if (retry?.user) {
-          handleSession(retry);
-          return;
+        // 2. Get user via authService
+        const user = await authService.getUser();
+        if (user) {
+          broadcastAuthStateChangeEvent();
         }
 
+        // 3. Redirect to home
         router.replace("/");
       } catch (err) {
         console.error(err);
@@ -32,16 +33,18 @@ export default function CallbackPage() {
       }
     }
 
-    function handleSession(session: any) {
-      if (session?.access_token) {
-        localStorage.setItem("session_token", session.access_token);
-      }
-      broadcastAuthStateChangeEvent();
-      router.replace("/");
-    }
-
     run();
   }, [router, authService]);
 
   return <div>Signing you in…</div>;
+}
+
+// helper
+function extractTokensFromUrl() {
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  return {
+    access_token: params.get("access_token") ?? undefined,
+    refresh_token: params.get("refresh_token") ?? undefined,
+  };
 }

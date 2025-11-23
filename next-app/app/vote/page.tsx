@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useServices } from "../../contexts/ServiceContext";
-import { IPoll } from "shared-backend/models/IPoll";
+import { IPoll } from "shared-backend";
 
 export default function VotePage() {
   const { authService, voteService } = useServices();
@@ -10,7 +10,7 @@ export default function VotePage() {
   const [message, setMessage] = useState("");
 
   async function fetchNextPoll() {
-    const { user } = await authService.getUser();
+    const user = await authService.getUser();
     if (!user) return;
 
     try {
@@ -29,7 +29,7 @@ export default function VotePage() {
   }
 
   async function vote(choice: "A" | "B" | "skip") {
-    const { user } = await authService.getUser();
+    const user = await authService.getUser();
     if (!user || !poll) return;
 
     try {

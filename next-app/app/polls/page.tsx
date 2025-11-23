@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
-import { IPoll } from "shared-backend/models/IPoll";
+import { IPoll } from "shared-backend";
 import { useServices } from "../../contexts/ServiceContext";
 
 export default function MyPollsPage() {
@@ -22,7 +22,7 @@ export default function MyPollsPage() {
 
   useEffect(() => {
     const load = async () => {
-      const { user } = await authService.getUser();
+      const user = await authService.getUser();
       if (!user) return;
       setUserId(user.id);
       await fetchPolls(user.id);

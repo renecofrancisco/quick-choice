@@ -15,7 +15,7 @@ export default function LoginPage() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const { user } = await authService.getUser();
+        const user = await authService.getUser();
         if (user) {
           router.replace("/"); // Redirect if logged in
         } else {
@@ -34,12 +34,16 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log("Sending magic link to:", email);
+      console.log("Redirect url:", process.env.NEXT_PUBLIC_APP_URL);
+
       await authService.sendMagicLink(
         email,
         `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
       );
       setMessage("Check your email for the login link!");
     } catch (err: any) {
+      console.error(err);
       setMessage("An error occurred while sending login link.");
     }
   };
