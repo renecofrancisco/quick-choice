@@ -47,4 +47,13 @@ export class ExpressAuthService implements IAuthService {
 
     return user;
   }
+
+  async restoreFromUrlTokens(hash: string): Promise<void> {
+    const params = new URLSearchParams(hash.replace(/^#/, ""));
+    const access_token = params.get("access_token") ?? undefined;
+
+    if (access_token) {
+      localStorage.setItem("session_token", access_token);
+    }
+  }
 }

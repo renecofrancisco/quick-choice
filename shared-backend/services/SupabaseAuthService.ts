@@ -39,4 +39,16 @@ export class SupabaseAuthService implements IAuthService {
       return null;
     }
   }
+
+  async restoreFromUrlTokens(hash: string): Promise<void> {
+    const params = new URLSearchParams(hash.replace(/^#/, ""));
+    const access_token = params.get("access_token") ?? undefined;
+    const refresh_token = params.get("refresh_token") ?? undefined;
+
+    if (access_token && refresh_token) {
+      localStorage.setItem("session_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      await this.supabase.auth.setSession({ access_token, refresh_token });
+    }
+  }
 }

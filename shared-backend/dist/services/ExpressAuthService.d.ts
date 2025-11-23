@@ -6,4 +6,5 @@ export declare class ExpressAuthService implements IAuthService {
     sendMagicLink(email: string, redirectUrl: string): Promise<void>;
     signOut(): Promise<void>;
     getUser(): Promise<IUser | null>;
+    restoreFromUrlTokens(hash: string): Promise<void>;
 }

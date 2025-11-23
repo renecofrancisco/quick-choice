@@ -42,5 +42,12 @@ class ExpressAuthService {
             return null;
         return user;
     }
+    async restoreFromUrlTokens(hash) {
+        const params = new URLSearchParams(hash.replace(/^#/, ""));
+        const access_token = params.get("access_token") ?? undefined;
+        if (access_token) {
+            localStorage.setItem("session_token", access_token);
+        }
+    }
 }
 exports.ExpressAuthService = ExpressAuthService;
