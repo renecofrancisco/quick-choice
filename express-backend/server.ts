@@ -14,9 +14,21 @@ import profileRoutes from "./routes/profileRoutes";
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://quick-choice.vercel.app'
+];
+
 app.use(cors({
-  origin: "http://localhost:3000", // your Next.js frontend
-  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
