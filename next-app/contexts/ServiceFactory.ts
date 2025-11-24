@@ -1,5 +1,5 @@
 import { BackendType } from "./backendTypes";
-import { createSupabaseServices, createExpressServices } from "shared-backend";
+import { createSupabaseServices, createExpressServices } from "../shared-backend";
 
 export function createServicesByType(type: BackendType) {
   switch (type) {

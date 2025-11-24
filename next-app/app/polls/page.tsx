@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
-import { IPoll } from "shared-backend";
+import { IPoll } from "../../shared-backend";
 import { useServices } from "../../contexts/ServiceContext";
 
 export default function MyPollsPage() {

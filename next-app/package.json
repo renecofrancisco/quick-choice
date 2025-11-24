@@ -11,6 +11,7 @@
     "reinstall-express": "npm uninstall express-backend && npm install ../express-backend/express-backend-1.0.0.tgz"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.84.0",
     "@vercel/node": "^5.5.9",
     "express": "^5.1.0",
     "next": "16.0.3",
@@ -18,7 +19,6 @@
     "react-dom": "19.2.0",
     "recharts": "^3.4.1",
     "serverless-http": "^4.0.0",
-    "shared-backend": "file:../shared-backend/shared-backend-1.0.0.tgz",
     "supabase": "^2.58.5"
   },
   "devDependencies": {

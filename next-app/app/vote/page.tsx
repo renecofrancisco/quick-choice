@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useServices } from "../../contexts/ServiceContext";
-import { IPoll } from "shared-backend";
+import { IPoll } from "../../shared-backend";
 
 export default function VotePage() {
   const { authService, voteService } = useServices();
