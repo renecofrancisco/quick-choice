@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useServices } from "../contexts/ServiceContext";
 import { broadcastAuthStateChangeEvent } from "../utils/authEvents";
+import { BackendType } from "../contexts/backendTypes";
 
 export default function Header() {
   const { authService, profileService } = useServices();
@@ -46,7 +47,7 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const backendType = process.env.NEXT_PUBLIC_BACKEND_TYPE;
+  const backendType = BackendType[process.env.NEXT_PUBLIC_BACKEND_TYPE];
 
   return (
     <header className="flex justify-between items-center p-4 bg-white shadow-md sticky top-0 left-0 w-full z-10">
