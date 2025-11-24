@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc",
     "start": "node dist/server.js",
     "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz",
     "pack:all": "npm run build && npm pack"
