@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --inspect",
-    "build": "cd ../shared-backend && npm run pack:all && cd ../next-app && npm run reinstall-backend && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz",
