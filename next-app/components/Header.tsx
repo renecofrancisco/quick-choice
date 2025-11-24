@@ -47,11 +47,13 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const backendType = BackendType[process.env.NEXT_PUBLIC_BACKEND_TYPE];
+
+  const backendTypeEnv = Number(process.env.NEXT_PUBLIC_BACKEND_TYPE);
+  const backendType = backendTypeEnv as BackendType;
 
   return (
     <header className="flex justify-between items-center p-4 bg-white shadow-md sticky top-0 left-0 w-full z-10">
-      <h1 className="text-xl font-bold">Quick Choice (via {backendType})</h1>
+      <h1 className="text-xl font-bold">Quick Choice (via {BackendType[backendType]})</h1>
 
       <div className="relative flex items-center space-x-4" ref={containerRef}>
         <span className="font-semibold">{credits ?? 0} 💎</span>
