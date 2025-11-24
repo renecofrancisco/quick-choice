@@ -7,18 +7,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz"
+    "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz",
+    "reinstall-express": "npm uninstall express-backend && npm install ../express-backend/express-backend-1.0.0.tgz"
   },
   "dependencies": {
+    "@vercel/node": "^5.5.9",
+    "express": "^5.1.0",
+    "express-backend": "file:../express-backend/express-backend-1.0.0.tgz",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "recharts": "^3.4.1",
+    "serverless-http": "^4.0.0",
     "shared-backend": "file:../shared-backend/shared-backend-1.0.0.tgz",
     "supabase": "^2.58.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/express": "^5.0.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

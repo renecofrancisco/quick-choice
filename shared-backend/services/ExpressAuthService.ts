@@ -48,18 +48,7 @@ export class ExpressAuthService implements IAuthService {
 
   // Logout: call serverless endpoint and clear localStorage
   async signOut(): Promise<void> {
-    const token = localStorage.getItem("session_token");
-    if (!token) return;
-
-    try {
-      await fetch(`${this.apiBaseUrl}/auth/logout`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } catch (err) {
-      console.warn("signOut request failed:", err);
-    } finally {
-      localStorage.removeItem("session_token");
-    }
+    localStorage.removeItem("session_token");
+    await fetch(`${this.apiBaseUrl}/auth/logout`, { method: "POST" });
   }
 }

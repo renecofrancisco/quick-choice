@@ -2,12 +2,13 @@
   "name": "express-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz"
+    "reinstall-backend": "npm uninstall shared-backend && npm install ../shared-backend/shared-backend-1.0.0.tgz",
+    "pack:all": "npm run build && npm pack"
   },
   "keywords": [],
   "author": "",

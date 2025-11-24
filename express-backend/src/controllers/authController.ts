@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { supabase } from "../lib/supabase";
-import { signToken, verifyToken, mapSupabaseUserToIUser } from "../lib/jwt";
+import { mapSupabaseUserToIUser } from "../lib/mapper";
 import { IUser } from "shared-backend";
 
 // POST /auth/magic-link
