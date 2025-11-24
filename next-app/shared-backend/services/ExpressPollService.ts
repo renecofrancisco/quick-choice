@@ -3,25 +3,24 @@ import { IPollService } from "../interfaces/IPollService";
 import { IPoll } from "../models/IPoll";
 
 export class ExpressPollService implements IPollService {
-  constructor(private expressApiUrl: string) { }
-  private baseUrl = `${this.expressApiUrl!}/polls`;
+  constructor(private apiBaseUrl: string) { }
 
   async getUserPolls(userId: string): Promise<IPoll[]> {
-    const res = await fetch(`${this.baseUrl}?userId=${userId}`);
+    const res = await fetch(`${this.apiBaseUrl}/polls?userId=${userId}`);
     if (!res.ok) throw new Error("Failed to fetch user polls from Express API");
     const data = await res.json();
     return data as IPoll[];
   }
 
   async getPollById(pollId: string): Promise<IPoll | null> {
-    const res = await fetch(`${this.baseUrl}/${pollId}`);
+    const res = await fetch(`${this.apiBaseUrl}/polls/${pollId}`);
     if (!res.ok) throw new Error("Failed to fetch poll from Express API");
     const data = await res.json();
     return data || null;
   }
 
   async createPoll(userId: string, optionA: string, optionB: string): Promise<string> {
-    const res = await fetch(`${this.baseUrl}`, {
+    const res = await fetch(`${this.apiBaseUrl}/polls`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, optionA, optionB }),
