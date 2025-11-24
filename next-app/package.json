@@ -13,7 +13,6 @@
   "dependencies": {
     "@vercel/node": "^5.5.9",
     "express": "^5.1.0",
-    "express-backend": "file:../express-backend/express-backend-1.0.0.tgz",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
