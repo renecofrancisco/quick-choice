@@ -1,0 +1,57 @@
+<div class="flex flex-col items-center justify-center flex-1 px-6">
+  <p *ngIf="message">{{ message }}</p>
+
+  <div class="space-y-4">
+    <button *ngFor="let poll of polls" (click)="openResultModal(poll)"
+      class="w-full text-left border p-4 rounded hover:bg-gray-50">
+      {{ poll.option_a }} vs {{ poll.option_b }}
+    </button>
+  </div>
+
+  <button (click)="showCreateModal = true"
+    class="fixed bottom-20 right-6 bg-blue-600 text-white w-14 h-14 rounded-full text-3xl flex items-center justify-center shadow-lg hover:bg-blue-700">
+    +
+  </button>
+
+  <!-- Create Poll Modal -->
+  <div *ngIf="showCreateModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md">
+      <h2 class="text-lg font-bold mb-4">Create New Poll</h2>
+      <form (ngSubmit)="handleCreate()" class="space-y-3">
+        <input type="text" [(ngModel)]="optionA" name="optionA" placeholder="Option A" maxLength="20" required
+          class="border p-2 rounded w-full" />
+        <input type="text" [(ngModel)]="optionB" name="optionB" placeholder="Option B" maxLength="20" required
+          class="border p-2 rounded w-full" />
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" (click)="showCreateModal = false"
+            class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create (-1
+            credit)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Result Modal -->
+  <div *ngIf="showResultModal && selectedPoll"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md">
+      <h2 class="text-lg font-bold mb-2">
+        {{ selectedPoll.option_a }} vs {{ selectedPoll.option_b }}
+      </h2>
+
+      <p class="mb-4 text-center font-semibold text-blue-600">
+        Winner: {{ getWinner() }} ({{ getWinnerPercent() | number:'1.1-1' }}%)
+      </p>
+
+      <!-- Optional: add chart library here -->
+
+      <div class="flex justify-end mt-4">
+        <button (click)="closeResultModal()" class="px-4 py-2 border rounded hover:bg-gray-100">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

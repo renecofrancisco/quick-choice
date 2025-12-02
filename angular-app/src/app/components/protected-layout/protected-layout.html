@@ -1,0 +1,11 @@
+<ng-container *ngIf="loading">
+  <p>Loading...</p>
+</ng-container>
+
+<ng-container *ngIf="!loading">
+  <header-component></header-component>
+  <main class="flex-1 p-6">
+    <router-outlet></router-outlet>
+  </main>
+  <footer-component></footer-component>
+</ng-container>

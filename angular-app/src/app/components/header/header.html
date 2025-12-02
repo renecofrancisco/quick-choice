@@ -1,0 +1,22 @@
+<header class="flex justify-between items-center p-4 bg-white shadow-md sticky top-0 left-0 w-full z-10">
+  <h1 class="text-xl font-bold">
+    Quick Choice (via {{ backendTypeLabel }})
+  </h1>
+
+  <div class="relative flex items-center space-x-4">
+    <span class="font-semibold">{{ credits ?? 0 }} 💎</span>
+
+    <div class="relative">
+      <button (click)="toggleProfileMenu()"
+        class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">
+        <span class="text-gray-700 font-bold">👤</span>
+      </button>
+
+      <div *ngIf="showProfileMenu" class="absolute right-0 top-full mt-2 w-32 bg-white border shadow-md rounded z-20">
+        <button (click)="handleLogout()" class="w-full text-left p-2 hover:bg-gray-100 rounded">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
