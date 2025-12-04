@@ -1,8 +1,10 @@
-import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServiceContext } from '../../services/service-context';
 import { BackendType } from '../../services/backend-types';
 import { environment } from '../../../environments/environment';
+import { AuthState } from '../../utils/auth-state';
+import { broadcastAuthStateChangeEvent } from '../../utils/auth-events';
 
 @Component({
   selector: 'header-component',
@@ -21,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   authService;
   profileService;
 
-  constructor(private elementRef: ElementRef, serviceContext: ServiceContext) {
+  constructor(private elementRef: ElementRef, serviceContext: ServiceContext, private authState: AuthState, private cd: ChangeDetectorRef) {
     const backendTypeEnv = Number(
       environment.BACKEND_TYPE ?? 0
     );
@@ -42,7 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async fetchCredits() {
-    const user = await this.authService.getUser();
+    const user = this.authState.user;
     if (!user) return;
 
     try {
@@ -51,6 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Error fetching credits:', err);
       this.credits = 0;
+    } finally {
+      this.cd.detectChanges();
     }
   }
 
@@ -60,7 +64,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   async handleLogout() {
     await this.authService.signOut();
-    localStorage.setItem('AUTH_STATE_CHANGED', Date.now().toString());
+    broadcastAuthStateChangeEvent();
     window.location.href = '/';
   }
 

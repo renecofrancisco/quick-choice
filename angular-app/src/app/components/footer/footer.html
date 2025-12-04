@@ -1,10 +1,10 @@
 <footer class="sticky bottom-0 left-0 w-full flex border-t shadow-md">
-  <a *ngFor="let tab of tabs" [routerLink]="tab.href" [ngClass]="{
-      'flex-1 text-center py-3 font-semibold transition bg-blue-600 text-white':
-        isActive(tab.href),
-      'flex-1 text-center py-3 font-semibold transition bg-white text-gray-500 hover:bg-gray-100':
-        !isActive(tab.href)
-    }">
+  <a *ngFor="let tab of tabs" [routerLink]="tab.href" class="flex-1 text-center py-3 font-semibold transition"
+    [ngClass]="
+      isActive(tab.href)
+        ? 'bg-blue-600 text-white'
+        : 'bg-white text-gray-500 hover:bg-gray-100'
+    ">
     {{ tab.label }}
   </a>
 </footer>

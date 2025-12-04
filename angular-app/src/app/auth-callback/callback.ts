@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiceContext } from '../services/service-context';
 import { broadcastAuthStateChangeEvent } from '../utils/auth-events';
+import { AuthState } from '../utils/auth-state';
 
 @Component({
   selector: 'app-callback',
@@ -13,7 +14,7 @@ import { broadcastAuthStateChangeEvent } from '../utils/auth-events';
 export class Callback implements OnInit {
   authService;
 
-  constructor(private router: Router, serviceContext: ServiceContext) {
+  constructor(private router: Router, serviceContext: ServiceContext, private authState: AuthState) {
     this.authService = serviceContext.value.authService;
   }
 
@@ -23,6 +24,7 @@ export class Callback implements OnInit {
         await this.authService.restoreFromUrlTokens(window.location.hash);
         const user = await this.authService.getUser();
         if (user) broadcastAuthStateChangeEvent();
+        this.authState.setUser(user);
         this.router.navigate(['/']);
       } catch (err) {
         console.error(err);

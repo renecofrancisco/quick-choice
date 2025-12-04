@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login';
 import { PollsPage } from './polls/polls';
 import { VotePage } from './vote/vote';
 import { ProtectedLayoutComponent } from './components/protected-layout/protected-layout';
+import { authGuard } from '../guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   {
     path: '',
     component: ProtectedLayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'polls', pathMatch: 'full' },
       { path: 'vote', component: VotePage },

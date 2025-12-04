@@ -1,10 +1,6 @@
-<ng-container *ngIf="loading">
-  <p>Loading...</p>
-</ng-container>
-
-<ng-container *ngIf="!loading">
+<ng-container>
   <header-component></header-component>
-  <main class="flex-1 p-6">
+  <main class="flex-1 overflow-y-auto min-h-screen">
     <router-outlet></router-outlet>
   </main>
   <footer-component></footer-component>

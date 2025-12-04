@@ -1,9 +1,10 @@
 // src/app/polls/page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IPoll } from '../../../shared-backend';
 import { ServiceContext } from '../services/service-context';
+import { AuthState } from '../utils/auth-state';
 
 @Component({
   selector: 'app-polls',
@@ -25,19 +26,17 @@ export class PollsPage implements OnInit {
 
   COLORS = ['#4f46e5', '#16a34a', '#facc15'];
 
-  authService;
   pollService;
   voteService;
 
-  constructor(serviceContext: ServiceContext) {
-    this.authService = serviceContext.value.authService;
+  constructor(serviceContext: ServiceContext, private authState: AuthState, private cd: ChangeDetectorRef) {
     this.pollService = serviceContext.value.pollService;
     this.voteService = serviceContext.value.voteService;
   }
 
   ngOnInit(): void {
     (async () => {
-      const user = await this.authService.getUser();
+      const user = this.authState.user;
       if (!user) return;
       this.userId = user.id;
       await this.fetchPolls(user.id);
@@ -57,6 +56,8 @@ export class PollsPage implements OnInit {
     } catch (err) {
       console.error(err);
       this.message = 'Error fetching your polls.';
+    } finally {
+      this.cd.detectChanges();
     }
   }
 

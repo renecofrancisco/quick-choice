@@ -1,7 +1,12 @@
-<header-component></header-component>
+<div class="flex flex-col min-h-screen">
+  <!-- optional header -->
+  <app-header></app-header>
 
-<main class="flex-1 overflow-y-auto">
-  <router-outlet></router-outlet>
-</main>
+  <!-- main content grows -->
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
 
-<footer-component></footer-component>
+  <!-- footer always at bottom -->
+  <app-footer></app-footer>
+</div>
