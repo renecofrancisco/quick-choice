@@ -13,6 +13,11 @@ import { ExpressPollService } from "./ExpressPollService";
 import { ExpressProfileService } from "./ExpressProfileService";
 import { ExpressVoteService } from "./ExpressVoteService";
 
+import { GraphQLAuthService } from "./GraphQLAuthService";
+import { GraphQLPollService } from "./GraphQLPollService";
+import { GraphQLProfileService } from "./GraphQLProfileService";
+import { GraphQLVoteService } from "./GraphQLVoteService";
+
 import { createClient } from "@supabase/supabase-js";
 
 export interface ServiceContextValue {
@@ -39,6 +44,15 @@ export function createExpressServices(expressApiUrl: string): ServiceContextValu
     pollService: new ExpressPollService(expressApiUrl),
     profileService: new ExpressProfileService(expressApiUrl),
     voteService: new ExpressVoteService(expressApiUrl),
+  };
+}
+
+export function createGraphQLServices(graphqlApiUrl: string): ServiceContextValue {
+  return {
+    authService: new GraphQLAuthService(graphqlApiUrl),
+    pollService: new GraphQLPollService(graphqlApiUrl),
+    profileService: new GraphQLProfileService(graphqlApiUrl),
+    voteService: new GraphQLVoteService(graphqlApiUrl),
   };
 }
 
