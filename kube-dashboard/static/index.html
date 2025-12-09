@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Kubernetes App Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      padding: 0;
+    }
+
+    .app-box {
+      padding: 10px;
+      margin: 8px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+
+    button {
+      padding: 6px 10px;
+      margin: 2px 0;
+      cursor: pointer;
+    }
+
+    button.active-tab {
+      background-color: #555;
+      color: white;
+    }
+
+    #apps-container {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    #apps {
+      flex: 1 1 30%;
+      max-width: 250px;
+    }
+
+    #logWindow {
+      flex: 2 1 70%;
+      background: black;
+      color: lime;
+      padding: 10px;
+      overflow: auto;
+      font-family: monospace;
+      border: 2px solid #555;
+      height: 80vh;
+    }
+
+    #logWindow h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h2 style="padding-left: 10px;">Kubernetes App Dashboard</h2>
+  <div id="apps-container">
+    <!-- Left panel: apps -->
+    <div id="apps"></div>
+
+    <!-- Right panel: logs -->
+    <div id="logWindow">
+      <h3 id="logTitle">Logs</h3>
+      <pre id="logOutput"></pre>
+    </div>
+  </div>
+
+  <!-- External JS file -->
+  <script src="/static/dashboard.js"></script>
+</body>
+
+</html>

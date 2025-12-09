@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-graphql-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-graphql-backend
+  template:
+    metadata:
+      labels:
+        app: python-graphql-backend
+    spec:
+      containers:
+      - name: python-graphql-backend
+        image: python-graphql-backend:local-2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000

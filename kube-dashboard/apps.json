@@ -1,0 +1,26 @@
+[
+  {
+    "name": "next-app",
+    "deployment": "next-app",
+    "containerPort": 3000,
+    "localPort": 3000
+  },
+  {
+    "name": "angular-app",
+    "deployment": "angular-app",
+    "containerPort": 80,
+    "localPort": 4200
+  },
+  {
+    "name": "express-api",
+    "deployment": "express-api",
+    "containerPort": 3000,
+    "localPort": 4000
+  },
+  {
+    "name": "python-graphql",
+    "deployment": "python-graphql-backend",
+    "containerPort": 5000,
+    "localPort": 8000
+  }
+]
