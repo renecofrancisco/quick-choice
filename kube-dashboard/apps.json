@@ -13,7 +13,7 @@
   },
   {
     "name": "express-api",
-    "deployment": "express-api",
+    "deployment": "express-backend",
     "containerPort": 3000,
     "localPort": 4000
   },
